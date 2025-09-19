@@ -109,8 +109,10 @@ public class PlayerObject {
         this.yforce += ((-1 * dirs[2] * driveForce) + (dirs[3] * driveForce) + (-1 * derivedDrag * this.xvel ) );
     }
 
-    public void parseForces(){
-        
+    public void forceToVel(){
+        //accelerate based on force
+        this.xvel += (this.xforce * this.mass);
+        this.yvel += (this.yforce * this.mass);
 
     }
 

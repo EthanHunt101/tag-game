@@ -2,7 +2,7 @@ public class PlayerObject {
     //this class handles the actual position of the player in the game
     //the player will be rendered by constantly setting the position of a shape or something to the
     //x-y of the player
-
+    private final int playerRadius = 25;
     //private - prevents bad cross-communication from multiple instances of the same class
     private double xpos = 0;
     private double ypos = 0;
@@ -29,6 +29,7 @@ public class PlayerObject {
     private double bouncefactor = 0.2;
     private double dashVel = maxSpeed * 2;
 
+    public double getPlayerRadius() {return playerRadius;}
     public double getXpos(){
         return this.xpos;
     }
@@ -109,12 +110,40 @@ public class PlayerObject {
         this.yforce += ((-1 * dirs[2] * driveForce) + (dirs[3] * driveForce) + (-1 * derivedDrag * this.xvel ) );
     }
 
-    public void forceToVel(){
+    //check edge of window collision
+    private void edgeCollide(){
+        //x axis collision checks
+        if((this.xpos - playerRadius) < xmin){
+            this.xvel = Math.abs(this.xvel) * bouncefactor;
+        }
+        else if((this.xpos + playerRadius) > xmax){
+            this.xvel = Math.abs(this.xvel) * bouncefactor * -1;
+        }
+        //y axis checks
+        if((this.ypos - playerRadius) < ymin){
+            this.yvel = bouncefactor * Math.abs(this.yvel);
+        }
+        else if((this.ypos + playerRadius) > ymax ){
+            this.yvel = -1 * bouncefactor * Math.abs(this.yvel);
+        }
+
+    }
+
+
+    public void parseMovement(){
         //accelerate based on force
         this.xvel += (this.xforce * this.mass);
         this.yvel += (this.yforce * this.mass);
-
+        //check for deccel limit / snapping
+        if(Math.abs(this.yvel) < this.minSpeed){
+            this.yvel = 0;
+        }
+        if(Math.abs(this.xvel) < this.minSpeed){
+            this.xvel = 0;
+        }
     }
+
+
 
     public void advArrayMove(int[] dirs){
         double yac = ((-1 * dirs[0] * driveForce) + (dirs[1] * driveForce) + (-1 * derivedDrag * this.yvel ) ) / this.mass;

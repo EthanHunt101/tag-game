@@ -61,7 +61,7 @@ public class GameScene {
         layout.setPadding(new Insets(10));
         layout.getStyleClass().add("game-root");
 
-        // Canvas + GraphicsContext
+        // These will be moved to different classes once we create the map selection page
         Canvas arena = new Canvas(800, 600);
         GraphicsContext gc = arena.getGraphicsContext2D();
         layout.setCenter(arena);
@@ -191,7 +191,8 @@ public class GameScene {
                 playerR.advArrayMove(redMoving);
                 playerB.advArrayMove(blueMoving);
 
-                // check object collisions (placeholders for your logic)
+
+                // check object collisions
                 for (Obstacle obstacle : obstacles) {
                     if (obstacle instanceof CircleObstacle) {
                         // circle collision logic here

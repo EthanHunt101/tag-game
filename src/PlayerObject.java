@@ -132,8 +132,8 @@ public class PlayerObject {
 
     public void parseMovement(){
         //accelerate based on force
-        this.xvel += (this.xforce * this.mass);
-        this.yvel += (this.yforce * this.mass);
+        this.xvel += (this.xforce / this.mass);
+        this.yvel += (this.yforce / this.mass);
         //check for deccel limit / snapping
         if(Math.abs(this.yvel) < this.minSpeed){
             this.yvel = 0;
@@ -141,24 +141,65 @@ public class PlayerObject {
         if(Math.abs(this.xvel) < this.minSpeed){
             this.xvel = 0;
         }
+        //check edge collision
+        edgeCollide();
+        //hard checks to prevent edge phasing
+        //add here if needed in future
+        //double newx = this.xpos + this.xvel;
+        //double newy = this.ypos + this.yvel;
+        //update position
+        this.xpos += this.xvel;
+        this.ypos += this.yvel;
+        //reset this frame's force values
+        this.xforce = 0;
+        this.yforce = 0;
+
+    }
+    //+y is dwn on screen
+    //+x is right
+    public void checkRectangleCollision(RectangleObstacle rect){
+        double xl = rect.getBottomLeft().getX();
+        double yb = rect.getBottomLeft().getY();
+        double xr = rect.getTopRight().getX();
+        double yt = rect.getTopRight().getY();
+        //if within vertical of box
+        if( (this.ypos > yt) && (this.ypos < yb)){
+            //if right edge within left edge of box
+            if(this.xpos + playerRadius > xl){
+                this.xvel = Math.abs(this.xvel) * bouncefactor * -1;
+            //if left edge within right edge of box
+            } else if(this.xpos - playerRadius < xr){
+                this.xvel = Math.abs(this.xvel) * bouncefactor;
+            }
+        }
+        if((this.xpos > xl) && (this.xpos < xr)){
+
+        }
+
+
+
     }
 
-
-
+    //sticking with this womp womp
     public void advArrayMove(int[] dirs){
+        //update forces from movement
+        //this.xforce += ((-1 * dirs[0] * driveForce) + (dirs[1] * driveForce) + (-1 * derivedDrag * this.yvel ) );
+        //this.yforce += ((-1 * dirs[2] * driveForce) + (dirs[3] * driveForce) + (-1 * derivedDrag * this.xvel ) );
         double yac = ((-1 * dirs[0] * driveForce) + (dirs[1] * driveForce) + (-1 * derivedDrag * this.yvel ) ) / this.mass;
-
         double xac = ((-1 * dirs[2] * driveForce) + (dirs[3] * driveForce) + (-1 * derivedDrag * this.xvel ) ) / this.mass;
-
+        //update velocity
+        //this.yvel += this.yforce / this.mass;
+        //this.xvel += this.xforce / this.mass;
         this.yvel += yac;
         this.xvel += xac;
+        //check for standstill
         if(Math.abs(this.yvel) < this.minSpeed){
             this.yvel = 0;
         }
         if(Math.abs(this.xvel) < this.minSpeed){
             this.xvel = 0;
         }
-
+        //check for edge bounce
         if(this.xpos < xmin){
             this.xvel = bouncefactor * Math.abs(this.xvel);
         }
@@ -171,9 +212,12 @@ public class PlayerObject {
         if(this.ypos > ymax ){
             this.yvel = -1 * bouncefactor * Math.abs(this.yvel);
         }
-
+        //update position
         this.ypos += this.yvel;
         this.xpos += this.xvel;
+        //reset forces
+        //this.xforce = 0;
+        //this.yforce = 0;
         //check for dashing and if they are still INVINCIBLE (tm)
         if((Math.abs(this.yvel) < this.maxSpeed + 1) || (Math.abs(this.xvel) < this.maxSpeed + 1)){
             this.invincible = false;

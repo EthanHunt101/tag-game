@@ -56,8 +56,10 @@ public class MenuScene {
         Button playGameButton = new Button("Play Game");
         playGameButton.getStyleClass().add("primary-btn");
         playGameButton.setOnAction(e -> {
-            stage.setScene(new GameScene(stage).getScene());
-            stage.setTitle("Two Player Tag - Game");
+            //
+            stage.setScene(new MapSelectionScene(stage).getMapScene());
+            //stage.setScene(new GameScene(stage).getScene());
+            // stage.setTitle("Two Player Tag - Game");
         });
 
         VBox vbox = new VBox(20);

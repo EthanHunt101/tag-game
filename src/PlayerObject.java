@@ -172,7 +172,15 @@ public class PlayerObject {
                 this.xvel = Math.abs(this.xvel) * bouncefactor;
             }
         }
+        // if within horizontal of box
         if((this.xpos > xl) && (this.xpos < xr)){
+            //if top edge within bottom edge of box
+            if(this.ypos - playerRadius < yb){
+                this.yvel = bouncefactor * Math.abs(this.yvel); // is this correct?
+            //if bottom edge within top edge of box
+            } else if(this.ypos + playerRadius > yt){
+                this.yvel = bouncefactor * Math.abs(this.yvel) * -1;
+            }
 
         }
 

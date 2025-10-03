@@ -64,6 +64,12 @@ public class GameScene {
         // These will be moved to different classes once we create the map selection page
         Canvas arena = new Canvas(800, 600);
         GraphicsContext gc = arena.getGraphicsContext2D();
+
+        //gc.translate(0, arena.getHeight());
+
+        //gc.scale(1, -1);
+
+
         layout.setCenter(arena);
 
         // HBoxes + VBoxes for top/bottom UI
@@ -135,11 +141,11 @@ public class GameScene {
         chooseRandomIt();
 
         // Creating the obstacles for first map (placeholder examples)
-        RectangleObstacle obstacle1 = new RectangleObstacle(new Point(23,3), new Point(15,5));
-        CircleObstacle obstacle2 = new CircleObstacle(new Point(500, 300), 50);
+        RectangleObstacle obstacle1 = new RectangleObstacle(new Point(100,200), new Point(150,300));
+       // CircleObstacle obstacle2 = new CircleObstacle(new Point(500, 300), 50);
 
         // create array of obstacles for the map
-        Obstacle[] obstacles = {obstacle1, obstacle2};
+        Obstacle[] obstacles = {obstacle1};
 
         // Create the Scene
         Scene gameScene = new Scene(layout);
@@ -187,17 +193,37 @@ public class GameScene {
                 gc.setFill(Color.LIGHTGRAY);
                 gc.fillRect(0, 0, arena.getWidth(), arena.getHeight());
 
+
+
                 // Move players
                 playerR.advArrayMove(redMoving);
                 playerB.advArrayMove(blueMoving);
 
 
-                // check object collisions
+                // check object collisions and draw obstacles
                 for (Obstacle obstacle : obstacles) {
                     if (obstacle instanceof CircleObstacle) {
                         // circle collision logic here
+                        throw new UnsupportedOperationException("Circle obstacle handling not implemented");
                     } else if (obstacle instanceof RectangleObstacle) {
+                        RectangleObstacle rectObstacle = (RectangleObstacle) obstacle;
                         // rectangle collision logic here
+                        //do this to cast as rectangle obstacle
+                        playerR.checkRectangleCollision(rectObstacle);
+                        playerB.checkRectangleCollision(rectObstacle);
+                        //draw rectangle
+                        gc.setFill(Color.BLACK);
+                        System.out.println(rectObstacle.getTopLeft().getX());
+                        System.out.println(rectObstacle.getTopLeft().getY());
+                        System.out.println(rectObstacle.getWidth());
+                        System.out.println(rectObstacle.getHeight());
+                        gc.fillRect(
+                                rectObstacle.getTopLeft().getX(),
+                                rectObstacle.getTopLeft().getY(),
+                                rectObstacle.getWidth(),
+                                rectObstacle.getHeight()
+                        );
+
                     }
                 }
 

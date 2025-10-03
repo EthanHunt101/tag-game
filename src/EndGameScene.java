@@ -38,6 +38,7 @@ public class EndGameScene {
             Scene menuScene = new MenuScene().createMenuScene(stage);
             stage.setScene(menuScene);
             stage.setTitle("Two Player Tag - Menu");
+
         });
 
         endLayout.getChildren().addAll(congrats, returnToTitle);

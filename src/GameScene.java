@@ -69,7 +69,6 @@ public class GameScene {
 
         //gc.scale(1, -1);
 
-
         layout.setCenter(arena);
 
         // HBoxes + VBoxes for top/bottom UI
@@ -194,8 +193,7 @@ public class GameScene {
                 gc.fillRect(0, 0, arena.getWidth(), arena.getHeight());
 
 
-
-                // Move players
+                // Add player movement velocity stuff
                 playerR.advArrayMove(redMoving);
                 playerB.advArrayMove(blueMoving);
 
@@ -213,10 +211,6 @@ public class GameScene {
                         playerB.checkRectangleCollision(rectObstacle);
                         //draw rectangle
                         gc.setFill(Color.BLACK);
-                        System.out.println(rectObstacle.getTopLeft().getX());
-                        System.out.println(rectObstacle.getTopLeft().getY());
-                        System.out.println(rectObstacle.getWidth());
-                        System.out.println(rectObstacle.getHeight());
                         gc.fillRect(
                                 rectObstacle.getTopLeft().getX(),
                                 rectObstacle.getTopLeft().getY(),
@@ -226,6 +220,10 @@ public class GameScene {
 
                     }
                 }
+
+                //update player position
+                playerR.updatePosition();
+                playerB.updatePosition();
 
                 // Draw red
                 gc.setFill(Color.RED);
@@ -237,8 +235,6 @@ public class GameScene {
 
                 // check for tagging and handle score, timer
                 checkTagging();
-
-
 
                 // Check if timer hit 0
                 if (timer.getTimeRemaining() <= 0) {
@@ -297,24 +293,6 @@ public class GameScene {
             // reset and start timer
             timer.reset(roundTime);
             timer.start();
-        }
-    }
-
-    /*
-     * check a player's collision with a rectangle object (placeholder)
-     */
-    private void checkRectCollide(PlayerObject player, RectangleObstacle rect){
-        double px = player.getXpos();
-        double py = player.getYpos();
-        double xl = rect.getBottomLeft().getX();
-        double yb = rect.getBottomLeft().getY();
-        double xr = rect.getTopRight().getX();
-        double yt = rect.getTopRight().getY();
-        if (py - playerRadius <= yt && py + playerRadius >= yb && px + playerRadius >= xl && px - playerRadius <= xr) {
-            if (px < xl) { player.setXvel(0); }
-            if (px > xr) { player.setXvel(0); }
-            if (py > yt) { player.setYvel(0); }
-            if (py < yb) { player.setXvel(0); }
         }
     }
 

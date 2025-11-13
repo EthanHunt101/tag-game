@@ -18,6 +18,8 @@ public class TwoPlayerTagGame extends Application {
         Scene menuScene = new MenuScene().createMenuScene(primaryStage);
         primaryStage.setTitle("Two Player Tag - Menu");
         primaryStage.setScene(menuScene);
+        primaryStage.setHeight(800);
+        primaryStage.setWidth(800);
         primaryStage.show();
     }
 

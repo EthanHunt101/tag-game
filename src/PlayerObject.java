@@ -20,7 +20,7 @@ public class PlayerObject {
     private double ymin = 0;
     private double ymax = 0;
 
-    private double maxSpeed = 15;
+    private double maxSpeed = 5;
     private double minSpeed = 0.1;
     private double mass = 2;
     //private double drag = 0.5;
@@ -114,14 +114,14 @@ public class PlayerObject {
     private void edgeCollide(){
         //x axis collision checks
         if((this.xpos - playerRadius) < xmin){
-            this.xvel = Math.abs(this.xvel) * bouncefactor;
+            this.xvel = Math.abs(this.xvel) * bouncefactor * -1;
         }
         else if((this.xpos + playerRadius) > xmax){
-            this.xvel = Math.abs(this.xvel) * bouncefactor * -1;
+            this.xvel = Math.abs(this.xvel) * bouncefactor * 1;
         }
         //y axis checks
         if((this.ypos - playerRadius) < ymin){
-            this.yvel = bouncefactor * Math.abs(this.yvel);
+            this.yvel = 1 * bouncefactor * Math.abs(this.yvel);
         }
         else if((this.ypos + playerRadius) > ymax ){
             this.yvel = -1 * bouncefactor * Math.abs(this.yvel);
@@ -158,28 +158,35 @@ public class PlayerObject {
     //+y is dwn on screen
     //+x is right
     public void checkRectangleCollision(RectangleObstacle rect){
-        double xl = rect.getBottomLeft().getX();
-        double yb = rect.getBottomLeft().getY();
-        double xr = rect.getTopRight().getX();
-        double yt = rect.getTopRight().getY();
+        double left = rect.getBottomLeft().getX();
+        double bottom = rect.getBottomLeft().getY();
+        double right = rect.getTopRight().getX();
+        double top = rect.getTopRight().getY();
         //if within vertical of box
-        if( (this.ypos > yt) && (this.ypos < yb)){
+        if( (this.ypos + playerRadius > top) && (this.ypos - playerRadius < bottom)){
             //if right edge within left edge of box
-            if(this.xpos + playerRadius > xl){
+            //needed additional check to make sure not just anywhere to right, repeat for rest you fucking dumbass
+            if(this.xpos + playerRadius > left && this.xpos < right){
                 this.xvel = Math.abs(this.xvel) * bouncefactor * -1;
+                //this.xvel *= -1;
+                //System.out.println("colliding with left edge");
             //if left edge within right edge of box
-            } else if(this.xpos - playerRadius < xr){
+            } else if(this.xpos - playerRadius < right && this.xpos > left){
                 this.xvel = Math.abs(this.xvel) * bouncefactor;
+                //this.xvel *= -1;
+                //System.out.println("colliding with right edge");
             }
         }
         // if within horizontal of box
-        if((this.xpos > xl) && (this.xpos < xr)){
+        if((this.xpos + playerRadius > left) && (this.xpos - playerRadius < right)){
             //if top edge within bottom edge of box
-            if(this.ypos - playerRadius < yb){
+            if(this.ypos - playerRadius < bottom && this.ypos > top){
                 this.yvel = bouncefactor * Math.abs(this.yvel); // is this correct?
+                //System.out.println("colliding with bottom edge");
             //if bottom edge within top edge of box
-            } else if(this.ypos + playerRadius > yt){
+            } else if(this.ypos + playerRadius > top && this.ypos < bottom){
                 this.yvel = bouncefactor * Math.abs(this.yvel) * -1;
+                //System.out.println("colliding with top edge");
             }
 
         }
@@ -221,8 +228,8 @@ public class PlayerObject {
             this.yvel = -1 * bouncefactor * Math.abs(this.yvel);
         }
         //update position
-        this.ypos += this.yvel;
-        this.xpos += this.xvel;
+        //this.ypos += this.yvel;
+        //this.xpos += this.xvel;
         //reset forces
         //this.xforce = 0;
         //this.yforce = 0;
@@ -232,7 +239,10 @@ public class PlayerObject {
         }
     }
 
-
+    public void updatePosition(){
+        this.ypos += this.yvel;
+        this.xpos += this.xvel;
+    }
 
 
 
